@@ -4,14 +4,15 @@
  **********************************************************************************/
 
 // Fill-in information from your Blynk Template here
-#define BLYNK_TEMPLATE_ID "TMPL3BhMypVyV"
-#define BLYNK_TEMPLATE_NAME "SmartGhar"
+#define BLYNK_TEMPLATE_ID ""
+#define BLYNK_DEVICE_NAME ""
 
 #define BLYNK_FIRMWARE_VERSION        "0.1.0"
 #define BLYNK_PRINT Serial
 
 // Custom board configuration
 #define USE_NODE_MCU_BOARD
+#define DECODE_NEC // Optimize decoder exclusively for the 24-key LED remote
 
 #include <IRremote.h>
 #include <EEPROM.h>
@@ -110,6 +111,13 @@ void all_SwitchOn(){
 
 void ir_remote(){
   if (irrecv.decode(&results)) {
+  
+      // Debug line to see what is ACTUALLY being received when WiFi is running
+      if(results.value != 0xFFFFFFFF && results.value != 0) {
+          Serial.print("Main App Received: 0x");
+          Serial.println(results.value, HEX);
+      }
+      
       switch(results.value) {
           case 0x00F7C837: // Button 1 (FADE)
           toggleState_1 = !toggleState_1;
@@ -143,11 +151,11 @@ void ir_remote(){
           EEPROM.commit();
           break;
 
-          case 0x00F7C03F: // Master ON ("ON" button)
+          case 0x00F7C03F: // Master ON
           all_SwitchOn();
           break;
 
-          case 0x00F740BF: // Master OFF ("OFF" button)
+          case 0x00F740BF: // Master OFF
           all_SwitchOff();
           break;
       }
