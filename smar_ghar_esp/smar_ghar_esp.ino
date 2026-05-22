@@ -4,8 +4,8 @@
  **********************************************************************************/
 
 // Fill-in information from your Blynk Template here
-#define BLYNK_TEMPLATE_ID ""
-#define BLYNK_DEVICE_NAME ""
+#define BLYNK_TEMPLATE_ID "TMPL3BhMypVyV"
+#define BLYNK_TEMPLATE_NAME "SmartGhar"
 
 #define BLYNK_FIRMWARE_VERSION        "0.1.0"
 #define BLYNK_PRINT Serial
