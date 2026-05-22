@@ -53,28 +53,28 @@ BLYNK_CONNECTED() {
 BLYNK_WRITE(VPIN_BUTTON_1) {
   toggleState_1 = param.asInt();
   digitalWrite(RelayPin1, toggleState_1 == 1 ? LOW : HIGH);
-  EEPROM.write(0, toggleState_1);
+  EEPROM.write(500, toggleState_1);
   EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_2) {
   toggleState_2 = param.asInt();
   digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
-  EEPROM.write(1, toggleState_2);
+  EEPROM.write(501, toggleState_2);
   EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_3) {
   toggleState_3 = param.asInt();
   digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
-  EEPROM.write(2, toggleState_3);
+  EEPROM.write(502, toggleState_3);
   EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_4) {
   toggleState_4 = param.asInt();
   digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
-  EEPROM.write(3, toggleState_4);
+  EEPROM.write(503, toggleState_4);
   EEPROM.commit();
 }
 
@@ -93,18 +93,18 @@ BLYNK_WRITE(VPIN_BUTTON_ALL_ON) {
 }
 
 void all_SwitchOff(){
-  toggleState_1 = 0; digitalWrite(RelayPin1, HIGH); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(0, toggleState_1); delay(50);
-  toggleState_2 = 0; digitalWrite(RelayPin2, HIGH); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(1, toggleState_2); delay(50);
-  toggleState_3 = 0; digitalWrite(RelayPin3, HIGH); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(2, toggleState_3); delay(50);
-  toggleState_4 = 0; digitalWrite(RelayPin4, HIGH); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(3, toggleState_4); delay(50);
+  toggleState_1 = 0; digitalWrite(RelayPin1, HIGH); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(500, toggleState_1); delay(50);
+  toggleState_2 = 0; digitalWrite(RelayPin2, HIGH); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(501, toggleState_2); delay(50);
+  toggleState_3 = 0; digitalWrite(RelayPin3, HIGH); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(502, toggleState_3); delay(50);
+  toggleState_4 = 0; digitalWrite(RelayPin4, HIGH); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(503, toggleState_4); delay(50);
   EEPROM.commit();
 }
 
 void all_SwitchOn(){
-  toggleState_1 = 1; digitalWrite(RelayPin1, LOW); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(0, toggleState_1); delay(50);
-  toggleState_2 = 1; digitalWrite(RelayPin2, LOW); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(1, toggleState_2); delay(50);
-  toggleState_3 = 1; digitalWrite(RelayPin3, LOW); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(2, toggleState_3); delay(50);
-  toggleState_4 = 1; digitalWrite(RelayPin4, LOW); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(3, toggleState_4); delay(50);
+  toggleState_1 = 1; digitalWrite(RelayPin1, LOW); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(500, toggleState_1); delay(50);
+  toggleState_2 = 1; digitalWrite(RelayPin2, LOW); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(501, toggleState_2); delay(50);
+  toggleState_3 = 1; digitalWrite(RelayPin3, LOW); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(502, toggleState_3); delay(50);
+  toggleState_4 = 1; digitalWrite(RelayPin4, LOW); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(503, toggleState_4); delay(50);
   EEPROM.commit();
 }
 
@@ -115,7 +115,7 @@ void ir_remote(){
           toggleState_1 = !toggleState_1;
           digitalWrite(RelayPin1, toggleState_1 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1);
-          EEPROM.write(0, toggleState_1);
+          EEPROM.write(500, toggleState_1);
           EEPROM.commit();
           break;
 
@@ -123,7 +123,7 @@ void ir_remote(){
           toggleState_2 = !toggleState_2;
           digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2);
-          EEPROM.write(1, toggleState_2);
+          EEPROM.write(501, toggleState_2);
           EEPROM.commit();
           break;
 
@@ -131,7 +131,7 @@ void ir_remote(){
           toggleState_3 = !toggleState_3;
           digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3);
-          EEPROM.write(2, toggleState_3);
+          EEPROM.write(502, toggleState_3);
           EEPROM.commit();
           break;
 
@@ -139,7 +139,7 @@ void ir_remote(){
           toggleState_4 = !toggleState_4;
           digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4);
-          EEPROM.write(3, toggleState_4);
+          EEPROM.write(503, toggleState_4);
           EEPROM.commit();
           break;
 
@@ -167,16 +167,16 @@ void setup()
   pinMode(RelayPin4, OUTPUT);
   
   // Read LAST states from EEPROM
-  toggleState_1 = EEPROM.read(0);
-  toggleState_2 = EEPROM.read(1);
-  toggleState_3 = EEPROM.read(2);
-  toggleState_4 = EEPROM.read(3);
+  toggleState_1 = EEPROM.read(500);
+  toggleState_2 = EEPROM.read(501);
+  toggleState_3 = EEPROM.read(502);
+  toggleState_4 = EEPROM.read(503);
 
   // Fallback to default OFF if EEPROM has never been written properly (returns 255)
-  if (toggleState_1 > 1) { toggleState_1 = 0; EEPROM.write(0, 0); }
-  if (toggleState_2 > 1) { toggleState_2 = 0; EEPROM.write(1, 0); }
-  if (toggleState_3 > 1) { toggleState_3 = 0; EEPROM.write(2, 0); }
-  if (toggleState_4 > 1) { toggleState_4 = 0; EEPROM.write(3, 0); }
+  if (toggleState_1 > 1) { toggleState_1 = 0; EEPROM.write(500, 0); }
+  if (toggleState_2 > 1) { toggleState_2 = 0; EEPROM.write(501, 0); }
+  if (toggleState_3 > 1) { toggleState_3 = 0; EEPROM.write(502, 0); }
+  if (toggleState_4 > 1) { toggleState_4 = 0; EEPROM.write(503, 0); }
   EEPROM.commit();
 
   // Restore Relays exactly as before
