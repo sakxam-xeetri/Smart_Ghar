@@ -122,7 +122,7 @@ bool config_save()
 
 bool config_init()
 {
-  EEPROM.begin(sizeof(ConfigStore));
+  EEPROM.begin(512);
   config_load();
   return true;
 }
