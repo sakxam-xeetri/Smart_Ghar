@@ -98,4 +98,14 @@ If your IR remote uses different HEX codes:
 - **Can't connect to WiFi:** Hold the Flash button on the NodeMCU (connected to D3/GPIO0) for 10 full seconds to wipe saved WiFi credentials and restart the pairing process.
 - **IR Not working:** Ensure the IR sensor is wired correctly: VCC -> 3.3V, GND -> GND, OUT -> D7.
 
+## OTA Updates (Blynk.Air)
+Since the project uses Blynk Edgent, Over-The-Air (OTA) updates are already built-in via the Blynk Cloud! You can update your ESP8266 wirelessly from anywhere in the world.
+
+### How to use Blynk OTA:
+1. In your code, increment the firmware version (e.g., change `#define BLYNK_FIRMWARE_VERSION "0.1.0"` to `"0.1.1"`).
+2. In Arduino IDE, go to **Sketch > Export compiled Binary**.
+3. Open the **Blynk Web Console**, navigate to **Blynk.Air** (the cloud uploading icon).
+4. Click **New Shipping**, select your device, and upload the generated `.bin` file.
+5. The ESP8266 will automatically download the new firmware, restart, and apply the update without any cables.
+
 Happy Automating!
