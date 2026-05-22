@@ -1,5 +1,6 @@
 /**********************************************************************************
  *  TITLE: Blynk 2.0 + IR control 4 Relays using ESP8266 (NodeMCU / D1 Mini)
+ *  FEATURES: Added EEPROM to remember last state after power loss
  **********************************************************************************/
 
 // Fill-in information from your Blynk Template here
@@ -13,6 +14,7 @@
 #define USE_NODE_MCU_BOARD
 
 #include <IRremote.h>
+#include <EEPROM.h>
 
 #define IR_RECV_PIN D7 // D7 (IR receiver pin)
 
@@ -31,32 +33,48 @@ decode_results results;
 #define VPIN_BUTTON_4    V4
 #define VPIN_BUTTON_C    V9
 
-// Relay State
-bool toggleState_1 = HIGH;
-bool toggleState_2 = HIGH;
-bool toggleState_3 = HIGH;
-bool toggleState_4 = HIGH;
+// Relay State (1 = ON/LOW, 0 = OFF/HIGH)
+int toggleState_1 = 0;
+int toggleState_2 = 0;
+int toggleState_3 = 0;
+int toggleState_4 = 0;
 
 #include "BlynkEdgent.h"
+
+BLYNK_CONNECTED() {
+  // We want to send the local EEPROM states back to Blynk Server so the app matches the physical relays
+  Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1);
+  Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2);
+  Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3);
+  Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4);
+}
 
 BLYNK_WRITE(VPIN_BUTTON_1) {
   toggleState_1 = param.asInt();
   digitalWrite(RelayPin1, toggleState_1 == 1 ? LOW : HIGH);
+  EEPROM.write(0, toggleState_1);
+  EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_2) {
   toggleState_2 = param.asInt();
   digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
+  EEPROM.write(1, toggleState_2);
+  EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_3) {
   toggleState_3 = param.asInt();
   digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
+  EEPROM.write(2, toggleState_3);
+  EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_4) {
   toggleState_4 = param.asInt();
   digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
+  EEPROM.write(3, toggleState_4);
+  EEPROM.commit();
 }
 
 BLYNK_WRITE(VPIN_BUTTON_C) {
@@ -64,34 +82,43 @@ BLYNK_WRITE(VPIN_BUTTON_C) {
 }
 
 void all_SwitchOff(){
-  toggleState_1 = 0; digitalWrite(RelayPin1, HIGH); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); delay(100);
-  toggleState_2 = 0; digitalWrite(RelayPin2, HIGH); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); delay(100);
-  toggleState_3 = 0; digitalWrite(RelayPin3, HIGH); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); delay(100);
-  toggleState_4 = 0; digitalWrite(RelayPin4, HIGH); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); delay(100);
+  toggleState_1 = 0; digitalWrite(RelayPin1, HIGH); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(0, toggleState_1); delay(100);
+  toggleState_2 = 0; digitalWrite(RelayPin2, HIGH); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(1, toggleState_2); delay(100);
+  toggleState_3 = 0; digitalWrite(RelayPin3, HIGH); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(2, toggleState_3); delay(100);
+  toggleState_4 = 0; digitalWrite(RelayPin4, HIGH); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(3, toggleState_4); delay(100);
+  EEPROM.commit();
 }
 
 void ir_remote(){
   if (irrecv.decode(&results)) {
       switch(results.value) {
           case 0x1FE50AF: // Button 1
-          digitalWrite(RelayPin1, !digitalRead(RelayPin1));
-          toggleState_1 = !digitalRead(RelayPin1);
-          Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1 == LOW ? 1 : 0);
+          toggleState_1 = !toggleState_1;
+          digitalWrite(RelayPin1, toggleState_1 == 1 ? LOW : HIGH);
+          Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1);
+          EEPROM.write(0, toggleState_1);
+          EEPROM.commit();
           break;
           case 0x1FED827: // Button 2
-          digitalWrite(RelayPin2, !digitalRead(RelayPin2));
-          toggleState_2 = !digitalRead(RelayPin2);
-          Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2 == LOW ? 1 : 0);
+          toggleState_2 = !toggleState_2;
+          digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
+          Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2);
+          EEPROM.write(1, toggleState_2);
+          EEPROM.commit();
           break;
           case 0x1FEF807: // Button 3
-          digitalWrite(RelayPin3, !digitalRead(RelayPin3));
-          toggleState_3 = !digitalRead(RelayPin3);
-          Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3 == LOW ? 1 : 0);
+          toggleState_3 = !toggleState_3;
+          digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
+          Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3);
+          EEPROM.write(2, toggleState_3);
+          EEPROM.commit();
           break;
           case 0x1FE30CF: // Button 4
-          digitalWrite(RelayPin4, !digitalRead(RelayPin4));
-          toggleState_4 = !digitalRead(RelayPin4);
-          Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4 == LOW ? 1 : 0);
+          toggleState_4 = !toggleState_4;
+          digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
+          Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4);
+          EEPROM.write(3, toggleState_4);
+          EEPROM.commit();
           break;
       }
       irrecv.resume();
@@ -102,16 +129,31 @@ void setup()
 {
   Serial.begin(115200);
 
+  EEPROM.begin(512);
+
   pinMode(RelayPin1, OUTPUT);
   pinMode(RelayPin2, OUTPUT);
   pinMode(RelayPin3, OUTPUT);
   pinMode(RelayPin4, OUTPUT);
   
-  //During Starting all Relays should TURN OFF
-  digitalWrite(RelayPin1, HIGH);
-  digitalWrite(RelayPin2, HIGH);
-  digitalWrite(RelayPin3, HIGH);
-  digitalWrite(RelayPin4, HIGH);
+  // Read LAST states from EEPROM
+  toggleState_1 = EEPROM.read(0);
+  toggleState_2 = EEPROM.read(1);
+  toggleState_3 = EEPROM.read(2);
+  toggleState_4 = EEPROM.read(3);
+
+  // Fallback to default OFF if EEPROM has never been written properly (returns 255)
+  if (toggleState_1 > 1) { toggleState_1 = 0; EEPROM.write(0, 0); }
+  if (toggleState_2 > 1) { toggleState_2 = 0; EEPROM.write(1, 0); }
+  if (toggleState_3 > 1) { toggleState_3 = 0; EEPROM.write(2, 0); }
+  if (toggleState_4 > 1) { toggleState_4 = 0; EEPROM.write(3, 0); }
+  EEPROM.commit();
+
+  // Restore Relays exactly as before
+  digitalWrite(RelayPin1, toggleState_1 == 1 ? LOW : HIGH);
+  digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
+  digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
+  digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
 
   irrecv.enableIRIn(); // Enabling IR sensor
   BlynkEdgent.begin();
