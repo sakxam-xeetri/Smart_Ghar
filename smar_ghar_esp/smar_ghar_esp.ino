@@ -111,7 +111,7 @@ void all_SwitchOn(){
 void ir_remote(){
   if (irrecv.decode(&results)) {
       switch(results.value) {
-          case 0xFFD02F: // Button 1 (FLASH)
+          case 0xF7C837: // Button 1 (FADE)
           toggleState_1 = !toggleState_1;
           digitalWrite(RelayPin1, toggleState_1 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1);
@@ -119,7 +119,7 @@ void ir_remote(){
           EEPROM.commit();
           break;
 
-          case 0xFFF00F: // Button 2 (STROBE)
+          case 0xF7E817: // Button 2 (SMOOTH)
           toggleState_2 = !toggleState_2;
           digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2);
@@ -127,7 +127,7 @@ void ir_remote(){
           EEPROM.commit();
           break;
 
-          case 0xFFC837: // Button 3 (FADE)
+          case 0xF7F00F: // Button 3 (STROBE)
           toggleState_3 = !toggleState_3;
           digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3);
@@ -135,7 +135,7 @@ void ir_remote(){
           EEPROM.commit();
           break;
 
-          case 0xFFE817: // Button 4 (SMOOTH)
+          case 0xF7D02F: // Button 4 (FLASH)
           toggleState_4 = !toggleState_4;
           digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4);
@@ -143,11 +143,11 @@ void ir_remote(){
           EEPROM.commit();
           break;
 
-          case 0xFFC03F: // Master ON ("ON" button)
+          case 0xF7C03F: // Master ON ("ON" button)
           all_SwitchOn();
           break;
 
-          case 0xFF40BF: // Master OFF ("OFF" button)
+          case 0xF740BF: // Master OFF ("OFF" button)
           all_SwitchOff();
           break;
       }
