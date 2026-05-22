@@ -59,7 +59,7 @@ public:
     case MODE_CONFIGURING:       return beatLED(COLOR_BLUE,    (int[]){ 200, 200 });
     case MODE_CONNECTING_NET:    return beatLED(COLOR_BLYNK,   (int[]){ 50, 500 });
     case MODE_CONNECTING_CLOUD:  return beatLED(COLOR_BLYNK,   (int[]){ 100, 100 });
-    case MODE_RUNNING:           return waveLED(COLOR_BLYNK,   5000);
+    case MODE_RUNNING:           return solidLED(COLOR_BLYNK);
     case MODE_OTA_UPGRADE:       return beatLED(COLOR_MAGENTA, (int[]){ 50, 50 });
     default:                     return beatLED(COLOR_RED,     (int[]){ 80, 100, 80, 1000 } );
     }
@@ -151,7 +151,12 @@ protected:
     return next;
   }
 
-  uint32_t waveLED(uint32_t colorMax, unsigned breathePeriod) {
+  uint32_t solidLED(uint32_t color) {
+      setRGB(color);
+      return 5000;
+    }
+
+    uint32_t waveLED(uint32_t colorMax, unsigned breathePeriod) {
     uint8_t redMax = (colorMax & 0xFF0000) >> 16;
     uint8_t greenMax = (colorMax & 0x00FF00) >> 8;
     uint8_t blueMax = (colorMax & 0x0000FF);
@@ -182,7 +187,12 @@ protected:
     return next;
   }
 
-  uint32_t waveLED(uint32_t, unsigned breathePeriod) {
+  uint32_t solidLED(uint32_t color) {
+      setLED(BOARD_LED_BRIGHTNESS);
+      return 5000;
+    }
+
+    uint32_t waveLED(uint32_t, unsigned breathePeriod) {
     uint32_t brightness = (m_Counter < 128) ? m_Counter : 255 - m_Counter;
 
     setLED(DIMM(brightness*2));
