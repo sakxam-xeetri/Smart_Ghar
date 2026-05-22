@@ -1,6 +1,6 @@
 /**********************************************************************************
  *  TITLE: Blynk 2.0 + IR control 4 Relays using ESP8266 (NodeMCU / D1 Mini)
- *  FEATURES: Added EEPROM to remember last state after power loss
+ *  FEATURES: EEPROM memory, Master All-ON and All-OFF via IR & Blynk
  **********************************************************************************/
 
 // Fill-in information from your Blynk Template here
@@ -27,11 +27,12 @@ decode_results results;
 #define RelayPin3 D5  // D5 (GPIO14)
 #define RelayPin4 D6  // D6 (GPIO12)
 
-#define VPIN_BUTTON_1    V1 
-#define VPIN_BUTTON_2    V2
-#define VPIN_BUTTON_3    V3 
-#define VPIN_BUTTON_4    V4
-#define VPIN_BUTTON_C    V9
+#define VPIN_BUTTON_1       V1 
+#define VPIN_BUTTON_2       V2
+#define VPIN_BUTTON_3       V3 
+#define VPIN_BUTTON_4       V4
+#define VPIN_BUTTON_ALL_OFF V9   // Master OFF Button
+#define VPIN_BUTTON_ALL_ON  V10  // Master ON Button
 
 // Relay State (1 = ON/LOW, 0 = OFF/HIGH)
 int toggleState_1 = 0;
@@ -77,15 +78,33 @@ BLYNK_WRITE(VPIN_BUTTON_4) {
   EEPROM.commit();
 }
 
-BLYNK_WRITE(VPIN_BUTTON_C) {
-  all_SwitchOff();
+// Master OFF from Blynk
+BLYNK_WRITE(VPIN_BUTTON_ALL_OFF) {
+  if(param.asInt() == 1) {
+    all_SwitchOff();
+  }
+}
+
+// Master ON from Blynk
+BLYNK_WRITE(VPIN_BUTTON_ALL_ON) {
+  if(param.asInt() == 1) {
+    all_SwitchOn();
+  }
 }
 
 void all_SwitchOff(){
-  toggleState_1 = 0; digitalWrite(RelayPin1, HIGH); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(0, toggleState_1); delay(100);
-  toggleState_2 = 0; digitalWrite(RelayPin2, HIGH); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(1, toggleState_2); delay(100);
-  toggleState_3 = 0; digitalWrite(RelayPin3, HIGH); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(2, toggleState_3); delay(100);
-  toggleState_4 = 0; digitalWrite(RelayPin4, HIGH); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(3, toggleState_4); delay(100);
+  toggleState_1 = 0; digitalWrite(RelayPin1, HIGH); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(0, toggleState_1); delay(50);
+  toggleState_2 = 0; digitalWrite(RelayPin2, HIGH); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(1, toggleState_2); delay(50);
+  toggleState_3 = 0; digitalWrite(RelayPin3, HIGH); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(2, toggleState_3); delay(50);
+  toggleState_4 = 0; digitalWrite(RelayPin4, HIGH); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(3, toggleState_4); delay(50);
+  EEPROM.commit();
+}
+
+void all_SwitchOn(){
+  toggleState_1 = 1; digitalWrite(RelayPin1, LOW); Blynk.virtualWrite(VPIN_BUTTON_1, toggleState_1); EEPROM.write(0, toggleState_1); delay(50);
+  toggleState_2 = 1; digitalWrite(RelayPin2, LOW); Blynk.virtualWrite(VPIN_BUTTON_2, toggleState_2); EEPROM.write(1, toggleState_2); delay(50);
+  toggleState_3 = 1; digitalWrite(RelayPin3, LOW); Blynk.virtualWrite(VPIN_BUTTON_3, toggleState_3); EEPROM.write(2, toggleState_3); delay(50);
+  toggleState_4 = 1; digitalWrite(RelayPin4, LOW); Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4); EEPROM.write(3, toggleState_4); delay(50);
   EEPROM.commit();
 }
 
@@ -99,6 +118,7 @@ void ir_remote(){
           EEPROM.write(0, toggleState_1);
           EEPROM.commit();
           break;
+
           case 0x1FED827: // Button 2
           toggleState_2 = !toggleState_2;
           digitalWrite(RelayPin2, toggleState_2 == 1 ? LOW : HIGH);
@@ -106,6 +126,7 @@ void ir_remote(){
           EEPROM.write(1, toggleState_2);
           EEPROM.commit();
           break;
+
           case 0x1FEF807: // Button 3
           toggleState_3 = !toggleState_3;
           digitalWrite(RelayPin3, toggleState_3 == 1 ? LOW : HIGH);
@@ -113,12 +134,21 @@ void ir_remote(){
           EEPROM.write(2, toggleState_3);
           EEPROM.commit();
           break;
+
           case 0x1FE30CF: // Button 4
           toggleState_4 = !toggleState_4;
           digitalWrite(RelayPin4, toggleState_4 == 1 ? LOW : HIGH);
           Blynk.virtualWrite(VPIN_BUTTON_4, toggleState_4);
           EEPROM.write(3, toggleState_4);
           EEPROM.commit();
+          break;
+
+          case 0x1FE807F: // Replace with your "Master ON" IR code
+          all_SwitchOn();
+          break;
+
+          case 0x1FE40BF: // Replace with your "Master OFF" IR code
+          all_SwitchOff();
           break;
       }
       irrecv.resume();
