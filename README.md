@@ -10,6 +10,7 @@ This project provides a robust and offline-capable smart home automation system 
 *   **Blynk Edgent Provisioning:** No need to hardcode WiFi credentials! Setup your WiFi quickly via the Blynk App over a secure AP.
 *   **IR Remote Control:** Fully functioning local fallback. You can toggle relays using a standard IR remote control (e.g., TSOP1838 receiver).
 *   **Real-Time Sync:** Turning on a switch via the IR remote updates the Blynk app instantly.
+*   **EEPROM Power-State Memory:** Automatically remembers and strictly restores the exact relay states (on/off) immediately after a power cut, before WiFi even connects.
 
 ---
 
